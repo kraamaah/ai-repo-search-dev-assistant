@@ -7,9 +7,9 @@ model = SentenceTransformer(
 )
 
 sentences = [
-    "train neural network",
-    "fit machine learning model",
-    "buy a pizza"
+    "where is the diarization loss computed",
+    "which function calculates training loss",
+    "how to order pizza online"
 ]
 
 embeddings = model.encode(sentences)

@@ -1,3 +1,5 @@
+# faiss_test.py
+
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
@@ -11,31 +13,49 @@ documents = [
     "fit machine learning model",
     "buy pizza",
     "deep learning tutorial",
+    "transformer attention mechanism",
+    "speech diarization loss function"
 ]
 
-embeddings = model.encode(documents)
-
-embeddings = np.array(
-    embeddings,
-    dtype=np.float32
+embeddings = model.encode(
+    documents,
+    convert_to_numpy=True
 )
 
+embeddings = embeddings.astype(
+    np.float32
+)
+
+dimension = embeddings.shape[1]
+
 index = faiss.IndexFlatL2(
-    embeddings.shape[1]
+    dimension
 )
 
 index.add(embeddings)
 
-query = "how to train AI"
+query = "how is training loss calculated"
 
-query_emb = model.encode(
-    [query]
-).astype(np.float32)
-
-distances, indices = index.search(
-    query_emb,
-    2
+query_embedding = model.encode(
+    [query],
+    convert_to_numpy=True
 )
 
-for i in indices[0]:
-    print(documents[i])
+query_embedding = query_embedding.astype(
+    np.float32
+)
+
+distances, indices = index.search(
+    query_embedding,
+    k=3
+)
+
+print("\nQuery:")
+print(query)
+
+print("\nTop Results:\n")
+
+for rank, idx in enumerate(indices[0]):
+    print(
+        f"{rank+1}. {documents[idx]}"
+    )
